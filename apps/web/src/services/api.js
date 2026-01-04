@@ -6,6 +6,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'htt
 // Token storage key
 const TOKEN_KEY = 'kolka_auth_token';
 
+// Toast singleton for showing errors (will be initialized when ToastContainer mounts)
+import { toast } from '../context/ToastContext';
+
 /**
  * API Client for making requests to the backend
  */
@@ -38,7 +41,9 @@ class ApiClient {
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorMessage = `HTTP error! status: ${response.status}`;
+          toast.error(errorMessage);
+          throw new Error(errorMessage);
         }
         return null;
       }
@@ -50,12 +55,18 @@ class ApiClient {
         if (response.status === 401) {
           localStorage.removeItem(TOKEN_KEY);
         }
-        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+        const errorMessage = data.error || data.message || `HTTP error! status: ${response.status}`;
+        toast.error(errorMessage);
+        throw new Error(errorMessage);
       }
 
       return data;
     } catch (error) {
       console.error(`API Error [${endpoint}]:`, error);
+      // Show toast for network errors (not already shown)
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        toast.error('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+      }
       throw error;
     }
   }

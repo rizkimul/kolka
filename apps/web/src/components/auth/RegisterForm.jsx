@@ -3,11 +3,13 @@ import { useAuth } from '../../context/AuthContext';
 import { Button, Card } from '../common';
 import AvatarPicker from './AvatarPicker';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../context/ToastContext';
 import styles from './AuthForms.module.css';
 
 const RegisterForm = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { showError } = useToast();
   const [formData, setFormData] = useState({ 
     name: '', 
     email: '',
@@ -16,21 +18,35 @@ const RegisterForm = () => {
     avatar: '' 
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.name) return setError('Nama harus diisi ya!');
-    if (!formData.email) return setError('Email harus diisi ya!');
-    if (!formData.password) return setError('Password harus diisi ya!');
-    if (formData.password.length < 6) return setError('Password minimal 6 karakter!');
-    if (formData.password !== formData.confirmPassword) {
-      return setError('Password tidak sama!');
+    if (!formData.name) {
+      showError('Nama harus diisi ya!');
+      return;
     }
-    if (!formData.avatar) return setError('Pilih avatar kamu dulu!');
+    if (!formData.email) {
+      showError('Email harus diisi ya!');
+      return;
+    }
+    if (!formData.password) {
+      showError('Password harus diisi ya!');
+      return;
+    }
+    if (formData.password.length < 6) {
+      showError('Password minimal 6 karakter!');
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      showError('Password tidak sama!');
+      return;
+    }
+    if (!formData.avatar) {
+      showError('Pilih avatar kamu dulu!');
+      return;
+    }
 
-    setError('');
     setLoading(true);
 
     try {
@@ -42,7 +58,7 @@ const RegisterForm = () => {
       });
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Gagal mendaftar. Coba lagi.');
+      // Error is already shown via toast in api.js
     } finally {
       setLoading(false);
     }
@@ -117,8 +133,6 @@ const RegisterForm = () => {
             onSelect={(avatar) => updateField('avatar', avatar)}
           />
         </div>
-
-        {error && <div className={styles.error}>{error}</div>}
 
         <Button 
           type="submit" 

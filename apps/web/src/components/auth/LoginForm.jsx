@@ -2,29 +2,35 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Button, Card } from '../common';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../context/ToastContext';
 import styles from './AuthForms.module.css';
 
 const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { showError } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return setError('Masukkan email dulu!');
-    if (!password) return setError('Masukkan password dulu!');
+    if (!email) {
+      showError('Masukkan email dulu!');
+      return;
+    }
+    if (!password) {
+      showError('Masukkan password dulu!');
+      return;
+    }
 
-    setError('');
     setLoading(true);
 
     try {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Gagal masuk. Coba cek lagi email dan password.');
+      // Error is already shown via toast in api.js
     } finally {
       setLoading(false);
     }
@@ -61,8 +67,6 @@ const LoginForm = () => {
             disabled={loading}
           />
         </div>
-
-        {error && <div className={styles.error}>{error}</div>}
 
         <Button 
           type="submit" 

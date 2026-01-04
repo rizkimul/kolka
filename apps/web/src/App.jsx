@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GameProvider } from './context/GameContext';
+import { ToastProvider } from './context/ToastContext';
+import { ToastContainer } from './components/common';
 import { 
   LoginPage, 
   RegisterPage, 
@@ -51,77 +53,80 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <GameProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route 
-              path="/login" 
-              element={
-                <PublicRoute>
-                  <LoginPage />
-                </PublicRoute>
-              } 
-            />
-            <Route 
-              path="/register" 
-              element={
-                <PublicRoute>
-                  <RegisterPage />
-                </PublicRoute>
-              } 
-            />
-            
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            
-            <Route 
-              path="/level-selection" 
-              element={
-                <ProtectedRoute>
-                  <LevelSelection />
-                </ProtectedRoute>
-              } 
-            />
+    <ToastProvider>
+      <AuthProvider>
+        <GameProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route 
+                path="/login" 
+                element={
+                  <PublicRoute>
+                    <LoginPage />
+                  </PublicRoute>
+                } 
+              />
+              <Route 
+                path="/register" 
+                element={
+                  <PublicRoute>
+                    <RegisterPage />
+                  </PublicRoute>
+                } 
+              />
+              
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              <Route 
+                path="/level-selection" 
+                element={
+                  <ProtectedRoute>
+                    <LevelSelection />
+                  </ProtectedRoute>
+                } 
+              />
 
-            <Route 
-              path="/game/:levelId" 
-              element={
-                <ProtectedRoute>
-                  <GamePlay />
-                </ProtectedRoute>
-              } 
-            />
+              <Route 
+                path="/game/:levelId" 
+                element={
+                  <ProtectedRoute>
+                    <GamePlay />
+                  </ProtectedRoute>
+                } 
+              />
 
-            <Route 
-              path="/guide" 
-              element={
-                <ProtectedRoute>
-                  <GuidePage />
-                </ProtectedRoute>
-              } 
-            />
+              <Route 
+                path="/guide" 
+                element={
+                  <ProtectedRoute>
+                    <GuidePage />
+                  </ProtectedRoute>
+                } 
+              />
 
-            <Route 
-              path="/leaderboard" 
-              element={
-                <ProtectedRoute>
-                  <Leaderboard />
-                </ProtectedRoute>
-              } 
-            />
-            
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </BrowserRouter>
-      </GameProvider>
-    </AuthProvider>
+              <Route 
+                path="/leaderboard" 
+                element={
+                  <ProtectedRoute>
+                    <Leaderboard />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              <Route path="/" element={<Navigate to="/dashboard" />} />
+            </Routes>
+          </BrowserRouter>
+          <ToastContainer />
+        </GameProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }
 

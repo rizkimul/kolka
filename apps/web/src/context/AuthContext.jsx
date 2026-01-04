@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
-      setLoading(true);
+      // Don't set global loading to avoid unmounting the form component
       
       const result = await authApi.signIn(email, password);
       
@@ -74,15 +74,13 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {
       setError(e.message);
       throw e;
-    } finally {
-      setLoading(false);
     }
   };
 
   const register = async (data) => {
     try {
       setError(null);
-      setLoading(true);
+      // Don't set global loading to avoid unmounting the form component
       
       const { email, password, name, avatar } = data;
       
@@ -109,8 +107,6 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {
       setError(e.message);
       throw e;
-    } finally {
-      setLoading(false);
     }
   };
 
