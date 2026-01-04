@@ -39,7 +39,7 @@ Before deploying, ensure you have a PostgreSQL database accessible from the inte
    - **Framework Preset**: Vite
    - **Root Directory**: `apps/web` (Click Edit)
    - **Environment Variables**:
-     - `VITE_API_BASE_URL`: Your deployed Backend URL (e.g. `https://your-api.vercel.app/api`)
+     - `VITE_API_URL`: Your deployed Backend URL (e.g. `https://your-api.vercel.app`)
      
 4. Click **Deploy**.
 
