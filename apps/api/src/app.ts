@@ -11,10 +11,13 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin: [env.FRONTEND_URL, "http://localhost:5173", "http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
+
+
 
 // Better Auth handler MUST be before express.json()
 // This handles all /api/auth/* routes
