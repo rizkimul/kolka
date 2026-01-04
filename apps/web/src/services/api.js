@@ -3,6 +3,9 @@
 // In development, use the local API server
 const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:3001' : '');
 
+// Token storage key
+const TOKEN_KEY = 'kolka_auth_token';
+
 /**
  * API Client for making requests to the backend
  */
@@ -13,12 +16,13 @@ class ApiClient {
 
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
+    const token = localStorage.getItem(TOKEN_KEY);
     
     const config = {
       ...options,
-      credentials: 'include', // Include cookies for session
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers,
       },
     };
@@ -42,6 +46,10 @@ class ApiClient {
       const data = await response.json();
 
       if (!response.ok) {
+        // Clear token on 401 errors
+        if (response.status === 401) {
+          localStorage.removeItem(TOKEN_KEY);
+        }
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
 
@@ -80,35 +88,55 @@ export const authApi = {
    * Register a new user
    */
   async signUp(email, password, name) {
-    return api.post('/api/auth/sign-up/email', {
+    const result = await api.post('/api/auth/register', {
       email,
       password,
       name,
     });
+    if (result?.token) {
+      localStorage.setItem(TOKEN_KEY, result.token);
+    }
+    return result;
   },
 
   /**
    * Login with email and password
    */
   async signIn(email, password) {
-    return api.post('/api/auth/sign-in/email', {
+    const result = await api.post('/api/auth/login', {
       email,
       password,
     });
+    if (result?.token) {
+      localStorage.setItem(TOKEN_KEY, result.token);
+    }
+    return result;
   },
 
   /**
    * Logout current user
    */
   async signOut() {
-    return api.post('/api/auth/sign-out', {});
+    localStorage.removeItem(TOKEN_KEY);
+    return { success: true };
   },
 
   /**
-   * Get current session
+   * Get current session (user from token)
    */
   async getSession() {
-    return api.get('/api/auth/get-session');
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      return null;
+    }
+    try {
+      const result = await api.get('/api/auth/me');
+      return result;
+    } catch (error) {
+      // Token is invalid, clear it
+      localStorage.removeItem(TOKEN_KEY);
+      return null;
+    }
   },
 };
 
@@ -248,4 +276,4 @@ export const leaderboardApi = {
 };
 
 // Export base API client for custom requests
-export { api, API_BASE_URL };
+export { api, API_BASE_URL, TOKEN_KEY };

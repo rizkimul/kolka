@@ -25,10 +25,10 @@ export const AuthProvider = ({ children }) => {
   const checkSession = async () => {
     try {
       setLoading(true);
-      const session = await authApi.getSession();
+      const result = await authApi.getSession();
       
-      if (session?.user) {
-        setUser(session.user);
+      if (result?.user) {
+        setUser(result.user);
         // Fetch user profile with progress
         try {
           const profile = await userApi.getProfile();
