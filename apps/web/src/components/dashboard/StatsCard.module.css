@@ -27,6 +27,7 @@
 
 .blue { background-color: var(--color-primary); }
 .yellow { background-color: var(--color-adverb); }
+.purple { background-color: #8B5CF6; }
 
 .label {
   display: block;

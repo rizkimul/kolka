@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { authApi, userApi } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -12,85 +13,160 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Check session on mount
   useEffect(() => {
-    // Check local storage for existing session on mount
-    const storedUser = localStorage.getItem('kolka_user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error('Failed to parse user data', e);
-        localStorage.removeItem('kolka_user');
-      }
-    }
-    setLoading(false);
+    checkSession();
   }, []);
 
-  const login = (username, password) => {
-    // Mock login logic
-    // In a real app, this would validate against a backend
-    // For now, allow any login if they strictly match a "mock" db or just simulate success
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (username.length < 3) {
-          reject(new Error('Username terlalu pendek'));
-          return;
+  const checkSession = async () => {
+    try {
+      setLoading(true);
+      const session = await authApi.getSession();
+      
+      if (session?.user) {
+        setUser(session.user);
+        // Fetch user profile with progress
+        try {
+          const profile = await userApi.getProfile();
+          setProgress(profile.gameProgress);
+        } catch (e) {
+          // Initialize progress if doesn't exist
+          await userApi.initProgress();
+          const profile = await userApi.getProfile();
+          setProgress(profile.gameProgress);
         }
-        
-        // Simulating a successful login
-        const userData = {
-          id: 'user_' + Math.random().toString(36).substr(2, 9),
-          username,
-          avatar: '🦁', // Default or fetched
-          level: 1,
-          score: 0
-        };
-        
-        setUser(userData);
-        localStorage.setItem('kolka_user', JSON.stringify(userData));
-        resolve(userData);
-      }, 1000);
-    });
+      }
+    } catch (e) {
+      // No valid session, user needs to login
+      setUser(null);
+      setProgress(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const register = (data) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (!data.username || !data.avatar) {
-          reject(new Error('Data tidak lengkap'));
-          return;
+  const login = async (email, password) => {
+    try {
+      setError(null);
+      setLoading(true);
+      
+      const result = await authApi.signIn(email, password);
+      
+      if (result?.user) {
+        setUser(result.user);
+        // Initialize or fetch progress
+        try {
+          const profile = await userApi.getProfile();
+          setProgress(profile.gameProgress);
+        } catch (e) {
+          await userApi.initProgress();
+          const profile = await userApi.getProfile();
+          setProgress(profile.gameProgress);
         }
-
-        const newUser = {
-          id: 'user_' + Math.random().toString(36).substr(2, 9),
-          username: data.username,
-          avatar: data.avatar,
-          level: 1,
-          score: 0,
-          stars: 0
-        };
-
-        setUser(newUser);
-        localStorage.setItem('kolka_user', JSON.stringify(newUser));
-        resolve(newUser);
-      }, 1500);
-    });
+        return result.user;
+      }
+      
+      throw new Error('Login gagal');
+    } catch (e) {
+      setError(e.message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('kolka_user');
+  const register = async (data) => {
+    try {
+      setError(null);
+      setLoading(true);
+      
+      const { email, password, name, avatar } = data;
+      
+      const result = await authApi.signUp(email, password, name);
+      
+      if (result?.user) {
+        // Update avatar if provided
+        if (avatar) {
+          await userApi.updateProfile({ image: avatar });
+        }
+        
+        // Initialize progress
+        await userApi.initProgress();
+        
+        // Fetch complete profile
+        const profile = await userApi.getProfile();
+        setUser({ ...result.user, image: avatar || result.user.image });
+        setProgress(profile.gameProgress);
+        
+        return result.user;
+      }
+      
+      throw new Error('Registrasi gagal');
+    } catch (e) {
+      setError(e.message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await authApi.signOut();
+    } catch (e) {
+      console.error('Logout error:', e);
+    } finally {
+      setUser(null);
+      setProgress(null);
+    }
+  };
+
+  const updateProfile = async (data) => {
+    try {
+      const updated = await userApi.updateProfile(data);
+      setUser(prev => ({ ...prev, ...updated }));
+      return updated;
+    } catch (e) {
+      setError(e.message);
+      throw e;
+    }
+  };
+
+  const refreshProgress = async () => {
+    try {
+      const profile = await userApi.getProfile();
+      setProgress(profile.gameProgress);
+      return profile.gameProgress;
+    } catch (e) {
+      console.error('Failed to refresh progress:', e);
+    }
   };
 
   const value = {
     user,
+    progress,
     loading,
+    error,
     login,
     register,
     logout,
-    isAuthenticated: !!user
+    updateProfile,
+    refreshProgress,
+    isAuthenticated: !!user,
+    // Computed properties for compatibility with old code
+    get level() {
+      return progress?.currentLevel || 1;
+    },
+    get score() {
+      return progress?.totalScore || 0;
+    },
+    get stars() {
+      return progress?.totalStars || 0;
+    },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './StatsCard.module.css';
 import { Card, ProgressBar } from '../common';
-import { Trophy, Star } from 'lucide-react';
+import { Trophy, Star, Sparkles } from 'lucide-react';
 import clsx from 'clsx';
 
 const StatsCard = ({ level = 1, currentExp = 0, maxExp = 100, score = 0, stars = 0 }) => {
@@ -26,7 +26,17 @@ const StatsCard = ({ level = 1, currentExp = 0, maxExp = 100, score = 0, stars =
           </div>
           <div>
             <span className={styles.label}>Skor</span>
-            <span className={styles.value}>{score}</span>
+            <span className={styles.value}>{score.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div className={styles.statItem}>
+          <div className={clsx(styles.iconBg, styles.purple)}>
+            <Sparkles size={20} color="white" />
+          </div>
+          <div>
+            <span className={styles.label}>Bintang</span>
+            <span className={styles.value}>{stars}</span>
           </div>
         </div>
       </div>

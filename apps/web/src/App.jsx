@@ -7,15 +7,44 @@ import {
   Dashboard, 
   LevelSelection, 
   GuidePage,
-  GamePlay
+  GamePlay,
+  Leaderboard
 } from './pages';
+
+// Loading Spinner
+const LoadingScreen = () => (
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    color: 'white',
+    fontSize: '1.2rem',
+  }}>
+    <div style={{ textAlign: 'center' }}>
+      <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🎮</div>
+      <p>Memuat KOLKA...</p>
+    </div>
+  </div>
+);
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/login" />;
+  
+  return children;
+};
+
+// Public Route - redirect if already logged in
+const PublicRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) return <LoadingScreen />;
+  if (user) return <Navigate to="/dashboard" />;
   
   return children;
 };
@@ -26,8 +55,22 @@ function App() {
       <GameProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/register" 
+              element={
+                <PublicRoute>
+                  <RegisterPage />
+                </PublicRoute>
+              } 
+            />
             
             <Route 
               path="/dashboard" 
@@ -61,6 +104,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <GuidePage />
+                </ProtectedRoute>
+              } 
+            />
+
+            <Route 
+              path="/leaderboard" 
+              element={
+                <ProtectedRoute>
+                  <Leaderboard />
                 </ProtectedRoute>
               } 
             />

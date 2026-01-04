@@ -3,28 +3,41 @@ import { useAuth } from '../context/AuthContext';
 import { UserProfile, StatsCard } from '../components/dashboard';
 import { Button, Card, Modal } from '../components/common';
 import { useNavigate } from 'react-router-dom';
-import { Play, BookOpen, Award, LogOut } from 'lucide-react';
+import { Play, BookOpen, Award } from 'lucide-react';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, progress, logout } = useAuth();
   const navigate = useNavigate();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 
+  // Calculate XP progress to next level
+  const totalXp = progress?.totalXp || 0;
+  const currentLevelXp = totalXp % 100; // XP within current level
+  const maxExp = 100; // XP needed per level
+
   return (
     <div className={styles.container}>
-      <UserProfile user={user} onLogout={() => setShowLogoutConfirm(true)} />
+      <UserProfile 
+        user={{
+          ...user,
+          avatar: user?.image || '🦁',
+          username: user?.name || 'Pemain',
+        }} 
+        onLogout={() => setShowLogoutConfirm(true)} 
+      />
       
       <StatsCard 
-        level={user?.level} 
-        score={user?.score} 
-        currentExp={45} 
-        maxExp={100} 
+        level={progress?.currentLevel || 1} 
+        score={progress?.totalScore || 0}
+        stars={progress?.totalStars || 0}
+        currentExp={currentLevelXp} 
+        maxExp={maxExp} 
       />
 
       <section className={styles.mainAction}>
@@ -55,7 +68,7 @@ const Dashboard = () => {
           <span>Panduan</span>
         </button>
 
-        <button className={styles.menuItem} onClick={() => alert('Leaderboard coming soon!')}>
+        <button className={styles.menuItem} onClick={() => navigate('/leaderboard')}>
           <div className={styles.menuIcon + ' ' + styles.yellow}>
             <Award size={24} color="white" />
           </div>

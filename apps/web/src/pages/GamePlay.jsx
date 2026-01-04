@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core';
 import { useGame } from '../context/GameContext';
+import { useAuth } from '../context/AuthContext';
 import { Button, ProgressBar, Modal } from '../components/common';
 import QuestionCard from '../components/game/QuestionCard';
 import DraggableWord from '../components/game/DraggableWord';
-import { ArrowLeft, RefreshCcw } from 'lucide-react';
+import { ArrowLeft, RefreshCcw, Loader2 } from 'lucide-react';
 import styles from './GamePlay.module.css';
 import confetti from 'canvas-confetti';
 import { playSuccessSound, playErrorSound, playPopSound } from '../utils/soundEffects'; 
@@ -14,10 +15,13 @@ import { useTTS } from '../hooks/useTTS';
 const GamePlay = () => {
   const { levelId } = useParams();
   const navigate = useNavigate();
-  const { state, startLevel, submitAnswer, nextQuestion, resetStatus } = useGame();
+  const { state, startLevel, submitAnswer, nextQuestion, resetStatus, submitLevelCompletion } = useGame();
+  const { refreshProgress } = useAuth();
   
   const [draggedAnswer, setDraggedAnswer] = useState(null);
   const [showResultModal, setShowResultModal] = useState(false);
+  const [completionResult, setCompletionResult] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const { speak } = useTTS();
 
   const sensors = useSensors(
@@ -25,24 +29,49 @@ const GamePlay = () => {
     useSensor(TouchSensor)
   );
 
+  // Load level questions from API
   useEffect(() => {
     if (levelId) {
-      startLevel(levelId);
-    }
-  }, [levelId]);
-
-  useEffect(() => {
-    if (state.status === 'finished') {
-      setShowResultModal(true);
-      playSuccessSound();
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 }
+      startLevel(levelId).catch((err) => {
+        console.error('Failed to start level:', err);
+        // Navigate back if level fails to load
+        navigate('/level-selection');
       });
-      speak('Luar biasa! Kamu menyelesaikan semua soal!');
+    }
+  }, [levelId, startLevel, navigate]);
+
+  // Handle level completion
+  useEffect(() => {
+    if (state.status === 'finished' && !showResultModal) {
+      handleLevelComplete();
     }
   }, [state.status]);
+
+  const handleLevelComplete = async () => {
+    setSubmitting(true);
+    setShowResultModal(true);
+    
+    playSuccessSound();
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    speak('Luar biasa! Kamu menyelesaikan semua soal!');
+
+    try {
+      // Submit completion to backend
+      const result = await submitLevelCompletion();
+      setCompletionResult(result);
+      
+      // Refresh user progress
+      await refreshProgress();
+    } catch (error) {
+      console.error('Failed to submit completion:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -50,7 +79,7 @@ const GamePlay = () => {
     if (over && over.id === 'answer-zone') {
       const answerText = active.data.current.text;
       setDraggedAnswer(answerText);
-      playPopSound(); // Interaction sound
+      playPopSound();
       
       const isCorrect = submitAnswer(answerText);
       
@@ -65,7 +94,6 @@ const GamePlay = () => {
       } else {
         playErrorSound();
         speak('Coba lagi ya.');
-        // Reset after short delay if wrong
         setTimeout(() => {
           setDraggedAnswer(null);
           resetStatus();
@@ -80,8 +108,57 @@ const GamePlay = () => {
     nextQuestion();
   };
 
+  const handlePlayAgain = () => {
+    setShowResultModal(false);
+    setCompletionResult(null);
+    startLevel(levelId);
+  };
+
+  // Calculate stars display
+  const getStarsDisplay = () => {
+    if (completionResult?.stars !== undefined) {
+      return '⭐'.repeat(completionResult.stars) + '☆'.repeat(3 - completionResult.stars);
+    }
+    // Fallback calculation
+    const total = state.correctCount + state.wrongCount;
+    if (total === 0) return '☆☆☆';
+    const percentage = (state.correctCount / total) * 100;
+    if (percentage === 100) return '⭐⭐⭐';
+    if (percentage >= 70) return '⭐⭐☆';
+    if (percentage >= 50) return '⭐☆☆';
+    return '☆☆☆';
+  };
+
+  // Loading state
+  if (state.status === 'loading') {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loadingContainer}>
+          <Loader2 className={styles.spinner} size={48} />
+          <p>Memuat soal...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (state.error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.errorContainer}>
+          <p>❌ {state.error}</p>
+          <Button onClick={() => navigate('/level-selection')}>
+            Kembali
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   const currentQuestion = state.questions[state.currentIndex];
-  const progress = ((state.currentIndex) / state.questions.length) * 100;
+  const progress = state.questions.length > 0 
+    ? ((state.currentIndex) / state.questions.length) * 100 
+    : 0;
 
   if (!currentQuestion) return <div>Loading...</div>;
 
@@ -148,15 +225,20 @@ const GamePlay = () => {
               <Button variant="outline" onClick={() => navigate('/level-selection')}>
                 Menu Utama
               </Button>
-              <Button onClick={() => window.location.reload()}>
+              <Button onClick={handlePlayAgain} disabled={submitting}>
                 Main Lagi 🔄
               </Button>
             </div>
           }
         >
           <div className={styles.resultContent}>
-            <div className={styles.bigW}>⭐ ⭐ ⭐</div>
+            <div className={styles.bigW}>{getStarsDisplay()}</div>
             <p className={styles.scoreText}>Total Skor: {state.score}</p>
+            
+            {completionResult && (
+              <p className={styles.xpText}>+{completionResult.xpGained} XP</p>
+            )}
+            
             <div className={styles.statsGrid}>
               <div className={styles.statBox}>
                 <span>✅ Benar</span>
@@ -167,6 +249,10 @@ const GamePlay = () => {
                 <strong>{state.wrongCount}</strong>
               </div>
             </div>
+            
+            {submitting && (
+              <p className={styles.savingText}>Menyimpan hasil...</p>
+            )}
           </div>
         </Modal>
       </div>

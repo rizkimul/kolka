@@ -3,10 +3,11 @@ import { relations } from "drizzle-orm";
 
 // ============================================
 // Better Auth Required Tables
+// Note: Better Auth generates its own string IDs, so we use text() not uuid()
 // ============================================
 
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: text("id").primaryKey(), // Better Auth generates string IDs
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false),
@@ -16,8 +17,8 @@ export const users = pgTable("users", {
 });
 
 export const sessions = pgTable("sessions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  id: text("id").primaryKey(), // Better Auth generates string IDs
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   token: text("token").notNull().unique(),
@@ -29,12 +30,13 @@ export const sessions = pgTable("sessions", {
 });
 
 export const accounts = pgTable("accounts", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  id: text("id").primaryKey(), // Better Auth generates string IDs
+  userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
+  password: text("password"), // Required for email/password auth
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   accessTokenExpiresAt: timestamp("access_token_expires_at"),
@@ -46,7 +48,7 @@ export const accounts = pgTable("accounts", {
 });
 
 export const verifications = pgTable("verifications", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: text("id").primaryKey(), // Better Auth generates string IDs
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -60,7 +62,7 @@ export const verifications = pgTable("verifications", {
 
 export const gameProgress = pgTable("game_progress", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
+  userId: text("user_id") // References Better Auth user (text ID)
     .notNull()
     .references(() => users.id, { onDelete: "cascade" })
     .unique(),
@@ -92,7 +94,7 @@ export const levelCompletions = pgTable(
   "level_completions",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: uuid("user_id")
+    userId: text("user_id") // References Better Auth user (text ID)
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     levelId: uuid("level_id")
