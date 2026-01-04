@@ -12,7 +12,37 @@ Before deploying, ensure you have a PostgreSQL database accessible from the inte
    npm run db:push
    ```
 
-## 2. Deploying Backend (`apps/api`)
+## 2. Database Management (Migrations & Seeding)
+
+Since Vercel functions are serverless and ephemeral, you should run administrative database commands **locally** from your machine, pointing to the production database.
+
+### Running Migrations
+To push your schema changes to the production database:
+
+1. Create a `.env.production` file in `apps/api` with your production `DATABASE_URL`.
+2. Run the command using that env file:
+   ```bash
+   # Option A: Using the specific command
+   cd apps/api
+   DATABASE_URL="postgresql://user:pass@host/db" npm run db:push
+
+   # Option B: If you have .env.production
+   cd apps/api
+   npm run db:push -- --config=drizzle.config.ts
+   ```
+   *(Note: Ensure your local environment variables use the production URL when running this)*
+
+### Running Seeds `npm run db:seed`
+To seed the production database:
+
+1. Ensure your `DATABASE_URL` environment variable is set to the **Production URL**.
+2. Run the seed command:
+   ```bash
+   cd apps/api
+   DATABASE_URL="postgresql://user:pass@host/db" npm run db:seed
+   ```
+
+## 3. Deploying Backend (`apps/api`)
 
 1. Go to your Vercel Dashboard and click **Add New -> Project**.
 2. Import your repository.
@@ -27,7 +57,13 @@ Before deploying, ensure you have a PostgreSQL database accessible from the inte
      - `node_env`: `production`
      - `BETTER_AUTH_SECRET`: Random string for auth.
      - `BETTER_AUTH_URL`: Your Vercel domain (e.g. `https://your-api.vercel.app`)
-     - `FRONTEND_URL`: Your frontend Vercel domain (e.g. `https://your-frontend.vercel.app`)
+     - `FRONTEND_URL`: Your frontend Vercel domain (e.g. `https://your-frontend.vercel.app`) - **IMPORTANT**: No trailing slash!
+
+> [!IMPORTANT]
+> **CORS Errors**: If you see CORS errors:
+> 1. Ensure `FRONTEND_URL` in your **Backend Project Settings** matches your frontend URL exactly (no trailing slash).
+> 2. Ensure `VITE_API_URL` in your **Frontend Project Settings** matches your backend URL exactly (no trailing slash).
+
 
 4. Click **Deploy**.
 

@@ -28,6 +28,10 @@ export const auth = betterAuth({
       maxAge: 60 * 5, // 5 minutes
     },
   },
+  advanced: {
+    cookiePrefix: "kolka-app",
+    useSecureCookies: true,
+  },
   trustedOrigins: [env.FRONTEND_URL],
 });
 

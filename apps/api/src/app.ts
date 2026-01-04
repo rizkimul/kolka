@@ -8,6 +8,9 @@ import { env } from "./config/env.js";
 
 const app = express();
 
+// Trust proxy for Vercel to allow secure cookies
+app.set("trust proxy", 1);
+
 // CORS configuration
 app.use(
   cors({
