@@ -31,6 +31,10 @@ export const auth = betterAuth({
   advanced: {
     cookiePrefix: "kolka-app",
     useSecureCookies: true,
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+    },
   },
   trustedOrigins: [env.FRONTEND_URL],
 });
