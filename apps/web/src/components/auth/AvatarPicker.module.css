@@ -1,0 +1,52 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.option {
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  font-size: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.option:hover {
+  transform: scale(1.1);
+  background-color: #f8fafc;
+}
+
+.selected {
+  border-color: var(--color-primary);
+  background-color: #E0F2FE; /* Light blue */
+  box-shadow: 0 0 0 4px rgba(79, 182, 227, 0.2);
+}
+
+.emoji {
+  line-height: 1;
+}
+
+.checkmark {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: var(--color-success);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}

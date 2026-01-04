@@ -1,0 +1,59 @@
+.authCard {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+  font-size: 1.75rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-xl);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  font-weight: 600;
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+}
+
+.input {
+  padding: var(--spacing-md);
+  border: 2px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: var(--spacing-sm);
+  background-color: #FFF5F5;
+  border-radius: var(--radius-sm);
+}

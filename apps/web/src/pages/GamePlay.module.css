@@ -1,0 +1,126 @@
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-sm);
+}
+
+.progressBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progressText {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  font-weight: 600;
+  text-align: center;
+}
+
+.score {
+  font-weight: 800;
+  color: var(--color-adverb);
+  background-color: #FEF3C7;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.playArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.optionsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: auto;
+  padding-bottom: var(--spacing-xl);
+}
+
+.feedbackArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: auto;
+  padding-bottom: var(--spacing-xl);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.successText {
+  color: var(--color-success);
+  font-size: 1.5rem;
+}
+
+.nextButton {
+  min-width: 200px;
+}
+
+/* Result Modal Styles */
+.resultContent {
+  text-align: center;
+}
+
+.bigW {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.scoreText {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.statsGrid {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
+.statBox {
+  background-color: #F8FAFC;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+}
+
+.statBox span {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+}
+
+.statBox strong {
+  font-size: 1.5rem;
+  color: var(--color-text-main);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+}

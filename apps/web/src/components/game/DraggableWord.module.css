@@ -1,0 +1,51 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px !important;
+  width: 100px;
+  height: 120px;
+  cursor: grab;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.card:active {
+  cursor: grabbing;
+  border-color: var(--color-primary);
+}
+
+.image {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.text {
+  font-weight: 700;
+  color: var(--color-text-main);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.speakerBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.speakerBtn:hover {
+  background-color: #E0F2FE;
+  transform: scale(1.1);
+}

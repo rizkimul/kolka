@@ -1,0 +1,77 @@
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.locked {
+  opacity: 0.6;
+  background-color: #F8FAFC;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-sm);
+}
+
+.iconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background-color: #f1f5f9;
+}
+
+.subject { background-color: #FDE8E8; } /* Light Red */
+.predicate { background-color: #E0F2FE; } /* Light Blue */
+.object { background-color: #DCFCE7; } /* Light Green */
+.adverb { background-color: #FEF3C7; } /* Light Yellow */
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.lockIcon {
+  color: #94A3B8;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.3;
+}
+
+.example {
+  background-color: #f8fafc;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--color-primary-dark);
+}
+
+.example small {
+  font-weight: 600;
+  color: var(--color-text-light);
+  display: block;
+  margin-bottom: 2px;
+}

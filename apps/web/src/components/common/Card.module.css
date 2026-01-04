@@ -1,0 +1,24 @@
+.card {
+  background-color: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+
+.bordered {
+  border: 2px solid #E2E8F0;
+}
+
+/* Specific variants for SPOK cards */
+.subject { border-bottom: 6px solid var(--color-subject); }
+.predicate { border-bottom: 6px solid var(--color-predicate); }
+.object { border-bottom: 6px solid var(--color-object); }
+.adverb { border-bottom: 6px solid var(--color-adverb); }

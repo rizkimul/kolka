@@ -1,0 +1,40 @@
+:root {
+  /* Brand Colors */
+  --color-primary: #4FB6E3;
+  --color-primary-dark: #3A9BC5;
+  --color-background: #E8F4FC;
+  --color-card-bg: #FFFFFF;
+  
+  /* SPOK Colors */
+  --color-subject: #E74C3C;
+  --color-predicate: #3498DB;
+  --color-object: #27AE60;
+  --color-adverb: #F39C12;
+  
+  /* Status Colors */
+  --color-success: #2ECC71;
+  --color-error: #E74C3C;
+  --color-text-main: #2C3E50;
+  --color-text-light: #7F8C8D;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
+  
+  /* Typography */
+  --font-family: 'Nunito', 'Poppins', sans-serif;
+}

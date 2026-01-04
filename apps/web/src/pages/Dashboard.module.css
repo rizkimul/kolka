@@ -1,0 +1,110 @@
+.container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.mainAction {
+  position: relative;
+  margin-bottom: var(--spacing-xl);
+}
+
+.playCard {
+  background: linear-gradient(135deg, white 0%, #f0f9ff 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #E0F2FE;
+}
+
+.playContent {
+  flex: 1;
+  z-index: 1;
+}
+
+.playContent h3 {
+  font-size: 1.5rem;
+  color: var(--color-primary-dark);
+  margin-bottom: var(--spacing-xs);
+}
+
+.playContent p {
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.9rem;
+}
+
+.playButton {
+  box-shadow: 0 4px 15px rgba(79, 182, 227, 0.4) !important;
+}
+
+.illustration {
+  font-size: 4rem;
+  margin-left: var(--spacing-md);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.menuGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.menuItem {
+  background-color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex; /* Changed from flex-col to flex for row alignment if needed, but keeping simple */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.2s;
+  height: 120px;
+}
+
+.menuItem:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.menuIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blue { background-color: var(--color-primary); }
+.yellow { background-color: var(--color-adverb); }
+
+.menuItem span {
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.logoutBtn {
+  background-color: var(--color-error) !important;
+  box-shadow: 0 4px 0 #c0392b !important;
+}
