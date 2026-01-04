@@ -36,7 +36,7 @@ export const auth = betterAuth({
       secure: env.NODE_ENV === "production",
     },
   },
-  trustedOrigins: [env.FRONTEND_URL],
+  trustedOrigins: [env.FRONTEND_URL, "http://localhost:5173", "http://localhost:3000"],
 });
 
 // Export auth types for use in middleware
