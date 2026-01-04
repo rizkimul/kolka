@@ -2,7 +2,7 @@ import "dotenv/config";
 
 export const env = {
   // Database
-  DATABASE_URL: process.env.DATABASE_URL!,
+  DATABASE_URL: process.env.DATABASE_URL?.trim()!,
 
   // Server
   PORT: parseInt(process.env.PORT || "3001", 10),
