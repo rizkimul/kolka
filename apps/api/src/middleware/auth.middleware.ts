@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import { auth } from "../lib/auth.js";
-import { fromNodeHeaders } from "better-auth/node";
+import { verifyToken } from "../lib/jwt.js";
+import { db } from "../db/index.js";
+import { users } from "../db/schema.js";
+import { eq } from "drizzle-orm";
 
 // Extend Express Request type to include user
 declare global {
@@ -12,18 +14,13 @@ declare global {
         email: string;
         image?: string | null;
       };
-      session?: {
-        id: string;
-        userId: string;
-        expiresAt: Date;
-      };
     }
   }
 }
 
 /**
- * Middleware to verify authentication
- * Attaches user and session to request if valid
+ * Middleware to verify JWT authentication
+ * Attaches user to request if valid
  */
 export const requireAuth = async (
   req: Request,
@@ -31,30 +28,40 @@ export const requireAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Debug logging
-    console.log("=== Auth Debug ===");
-    console.log("Cookies:", req.headers.cookie);
-    console.log("Origin:", req.headers.origin);
-    
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
+    const authHeader = req.headers.authorization;
 
-    console.log("Session result:", session ? "Found" : "Not found");
-
-    if (!session) {
-      res.status(401).json({ error: "Unauthorized - No valid session" });
+    if (!authHeader?.startsWith("Bearer ")) {
+      res.status(401).json({ error: "Unauthorized - No token provided" });
       return;
     }
 
-    // Attach user and session to request
-    req.user = session.user;
-    req.session = session.session;
+    const token = authHeader.split(" ")[1];
+    const payload = verifyToken(token);
+
+    // Fetch user from database
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, payload.userId))
+      .limit(1);
+
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized - User not found" });
+      return;
+    }
+
+    // Attach user to request
+    req.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+    };
 
     next();
   } catch (error) {
     console.error("Auth middleware error:", error);
-    res.status(401).json({ error: "Unauthorized - Invalid session" });
+    res.status(401).json({ error: "Unauthorized - Invalid token" });
   }
 };
 
@@ -67,13 +74,26 @@ export const optionalAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
+    const authHeader = req.headers.authorization;
 
-    if (session) {
-      req.user = session.user;
-      req.session = session.session;
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      const payload = verifyToken(token);
+
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, payload.userId))
+        .limit(1);
+
+      if (user) {
+        req.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
+      }
     }
 
     next();

@@ -11,10 +11,9 @@ app.listen(env.PORT, () => {
   Frontend: ${env.FRONTEND_URL}
   
   Available endpoints:
-  - POST /api/auth/sign-up/email
-  - POST /api/auth/sign-in/email
-  - POST /api/auth/sign-out
-  - GET  /api/auth/session
+  - POST /api/auth/register
+  - POST /api/auth/login
+  - GET  /api/auth/me
   - GET  /api/health
   - GET  /api/users/me
   - GET  /api/levels
@@ -22,4 +21,3 @@ app.listen(env.PORT, () => {
   - GET  /api/leaderboard
   `);
 });
-

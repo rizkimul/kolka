@@ -11,16 +11,20 @@ export const env = {
   // Frontend URL (for CORS)
   FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",
 
-  // Better Auth
-  BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET!,
-  BETTER_AUTH_URL: process.env.BETTER_AUTH_URL || "http://localhost:3001",
+  // JWT Secret
+  JWT_SECRET: process.env.JWT_SECRET || process.env.BETTER_AUTH_SECRET!,
 } as const;
 
 // Validate required environment variables
-const requiredEnvVars = ["DATABASE_URL", "BETTER_AUTH_SECRET"] as const;
+const requiredEnvVars = ["DATABASE_URL"] as const;
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     throw new Error(`Missing required environment variable: ${envVar}`);
   }
+}
+
+// Validate JWT secret
+if (!process.env.JWT_SECRET && !process.env.BETTER_AUTH_SECRET) {
+  throw new Error("Missing required environment variable: JWT_SECRET");
 }
