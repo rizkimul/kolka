@@ -31,9 +31,16 @@ export const requireAuth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    // Debug logging
+    console.log("=== Auth Debug ===");
+    console.log("Cookies:", req.headers.cookie);
+    console.log("Origin:", req.headers.origin);
+    
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers),
     });
+
+    console.log("Session result:", session ? "Found" : "Not found");
 
     if (!session) {
       res.status(401).json({ error: "Unauthorized - No valid session" });

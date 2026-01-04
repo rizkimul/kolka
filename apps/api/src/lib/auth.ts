@@ -16,6 +16,7 @@ export const auth = betterAuth({
   }),
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
+  basePath: "/api/auth", // Auth routes are mounted at /api/auth/*
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false, // Simplified for children's app
@@ -32,6 +33,7 @@ export const auth = betterAuth({
     cookiePrefix: "kolka-app",
     useSecureCookies: env.NODE_ENV === "production",
     defaultCookieAttributes: {
+      path: "/", // Ensure cookies are sent to all routes
       sameSite: env.NODE_ENV === "production" ? "none" : "lax",
       secure: env.NODE_ENV === "production",
     },
