@@ -34,7 +34,7 @@ export const auth = betterAuth({
     useSecureCookies: env.NODE_ENV === "production",
     defaultCookieAttributes: {
       path: "/", // Ensure cookies are sent to all routes
-      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: "lax", // Use 'lax' since we're using a proxy (same-origin)
       secure: env.NODE_ENV === "production",
     },
   },
