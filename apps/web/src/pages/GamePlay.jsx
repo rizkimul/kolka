@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core';
 import { useGame } from '../context/GameContext';
 import { useAuth } from '../context/AuthContext';
-import { Button, ProgressBar, Modal } from '../components/common';
+import { Button, ProgressBar, Modal, Card } from '../components/common';
 import QuestionCard from '../components/game/QuestionCard';
 import DraggableWord from '../components/game/DraggableWord';
-import { ArrowLeft, RefreshCcw, Loader2 } from 'lucide-react';
+import { ArrowLeft, RefreshCcw, Loader2, Volume2 } from 'lucide-react';
 import styles from './GamePlay.module.css';
 import confetti from 'canvas-confetti';
 import { playSuccessSound, playErrorSound, playPopSound } from '../utils/soundEffects'; 
@@ -15,13 +15,14 @@ import { useTTS } from '../hooks/useTTS';
 const GamePlay = () => {
   const { levelId } = useParams();
   const navigate = useNavigate();
-  const { state, startLevel, submitAnswer, nextQuestion, resetStatus, submitLevelCompletion } = useGame();
+  const { state, startLevel, submitAnswer, nextQuestion, resetStatus, submitLevelCompletion, resetGame } = useGame();
   const { refreshProgress } = useAuth();
   
   const [draggedAnswer, setDraggedAnswer] = useState(null);
   const [showResultModal, setShowResultModal] = useState(false);
   const [completionResult, setCompletionResult] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [activeId, setActiveId] = useState(null); // Track which item is being dragged
   const { speak } = useTTS();
 
   const sensors = useSensors(
@@ -29,23 +30,41 @@ const GamePlay = () => {
     useSensor(TouchSensor)
   );
 
+  // Reset local state when levelId changes (fix for level completion bug)
+  useEffect(() => {
+    setDraggedAnswer(null);
+    setShowResultModal(false);
+    setCompletionResult(null);
+    setSubmitting(false);
+    setActiveId(null);
+  }, [levelId]);
+
   // Load level questions from API
   useEffect(() => {
     if (levelId) {
+      // Start level
       startLevel(levelId).catch((err) => {
         console.error('Failed to start level:', err);
         // Navigate back if level fails to load
         navigate('/level-selection');
       });
     }
-  }, [levelId, startLevel, navigate]);
+
+    // Cleanup: Reset game state when component unmounts or level changes
+    // This ensures we don't carry over state to other game instances
+    return () => {
+      resetGame();
+    };
+  }, [levelId, startLevel, navigate, resetGame]);
 
   // Handle level completion
   useEffect(() => {
-    if (state.status === 'finished' && !showResultModal) {
+    // Only trigger completion if status is finished AND the active level matches current URL
+    // This prevents race condition where stale "finished" state from previous level triggers this
+    if (state.status === 'finished' && !showResultModal && state.activeLevel === levelId) {
       handleLevelComplete();
     }
-  }, [state.status]);
+  }, [state.status, state.activeLevel, levelId, showResultModal]);
 
   const handleLevelComplete = async () => {
     setSubmitting(true);
@@ -73,8 +92,13 @@ const GamePlay = () => {
     }
   };
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
+    setActiveId(null); // Clear active item
     
     if (over && over.id === 'answer-zone') {
       const answerText = active.data.current.text;
@@ -100,6 +124,12 @@ const GamePlay = () => {
         }, 1000);
       }
     }
+  };
+
+  // Get active option for DragOverlay
+  const getActiveOption = () => {
+    if (!activeId || !currentQuestion) return null;
+    return currentQuestion.options?.find(opt => opt.id === activeId);
   };
 
   const handleNext = () => {
@@ -163,7 +193,7 @@ const GamePlay = () => {
   if (!currentQuestion) return <div>Loading...</div>;
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className={styles.container}>
         <header className={styles.header}>
           <Button 
@@ -255,6 +285,18 @@ const GamePlay = () => {
             )}
           </div>
         </Modal>
+
+        {/* Drag Overlay - Shows the dragged card following cursor/finger */}
+        <DragOverlay dropAnimation={null}>
+          {activeId && getActiveOption() && (
+            <div className={styles.dragOverlay}>
+              <Card className={styles.dragCard}>
+                <div className={styles.dragImage}>{getActiveOption().image}</div>
+                <div className={styles.dragText}>{getActiveOption().text}</div>
+              </Card>
+            </div>
+          )}
+        </DragOverlay>
       </div>
     </DndContext>
   );

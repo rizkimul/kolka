@@ -168,3 +168,33 @@
   color: var(--color-text-light);
   margin-top: var(--spacing-sm);
 }
+
+/* Drag Overlay Styles */
+.dragOverlay {
+  cursor: grabbing;
+}
+
+.dragCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px !important;
+  width: 100px;
+  height: 120px;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.dragImage {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.dragText {
+  font-weight: 700;
+  color: var(--color-text-main);
+  text-align: center;
+  font-size: 0.9rem;
+}
