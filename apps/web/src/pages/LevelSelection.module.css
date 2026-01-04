@@ -1,5 +1,5 @@
 .container {
-  padding: 20px;
+  padding: 16px;
   max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
@@ -9,19 +9,33 @@
   display: flex;
   align-items: center;
   margin-bottom: var(--spacing-lg);
-  position: relative;
+  gap: var(--spacing-sm);
 }
 
 .backButton {
-  position: absolute;
-  left: 0;
+  flex-shrink: 0;
+}
+
+/* Hide "Kembali" text on small screens, show only icon */
+@media (max-width: 400px) {
+  .backButtonText {
+    display: none;
+  }
 }
 
 .title {
-  width: 100%;
+  flex: 1;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: var(--color-primary);
+  margin-right: 40px; /* Balance the back button on larger screens */
+}
+
+@media (max-width: 400px) {
+  .title {
+    margin-right: 24px; /* Less offset when back button text is hidden */
+    font-size: 1.2rem;
+  }
 }
 
 .grid {

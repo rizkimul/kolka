@@ -40,7 +40,7 @@ const LevelSelection = () => {
             onClick={() => navigate('/dashboard')}
             className={styles.backButton}
           >
-            Kembali
+            <span className={styles.backButtonText}>Kembali</span>
           </Button>
           <h1 className={styles.title}>Pilih Latihan 📚</h1>
         </header>
@@ -62,7 +62,7 @@ const LevelSelection = () => {
             onClick={() => navigate('/dashboard')}
             className={styles.backButton}
           >
-            Kembali
+            <span className={styles.backButtonText}>Kembali</span>
           </Button>
           <h1 className={styles.title}>Pilih Latihan 📚</h1>
         </header>
@@ -83,7 +83,7 @@ const LevelSelection = () => {
           onClick={() => navigate('/dashboard')}
           className={styles.backButton}
         >
-          Kembali
+          <span className={styles.backButtonText}>Kembali</span>
         </Button>
         <h1 className={styles.title}>Pilih Latihan 📚</h1>
       </header>
