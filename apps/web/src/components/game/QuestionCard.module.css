@@ -31,4 +31,31 @@
   text-align: center;
   line-height: 2;
   width: 100%;
+  position: relative;
+}
+
+.sentenceSpeaker {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #E0F2FE;
+  border: 1px solid var(--color-primary);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.sentenceSpeaker:hover {
+  background-color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.sentenceSpeaker:hover svg {
+  color: white !important;
 }
