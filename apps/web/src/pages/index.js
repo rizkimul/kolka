@@ -5,4 +5,7 @@ export { default as LevelSelection } from './LevelSelection';
 export { default as GuidePage } from './GuidePage';
 export { default as GamePlay } from './GamePlay';
 export { default as Leaderboard } from './Leaderboard';
-
+export { default as BermainMenu } from './BermainMenu';
+export { default as MelengkapiKalimat } from './MelengkapiKalimat';
+export { default as MenyusunKalimat } from './MenyusunKalimat';
+export { default as KamusPage } from './KamusPage';

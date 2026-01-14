@@ -10,23 +10,19 @@ import {
   LevelSelection, 
   GuidePage,
   GamePlay,
-  Leaderboard
+  Leaderboard,
+  BermainMenu,
+  MelengkapiKalimat,
+  MenyusunKalimat,
+  KamusPage
 } from './pages';
 
 // Loading Spinner
 const LoadingScreen = () => (
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white',
-    fontSize: '1.2rem',
-  }}>
-    <div style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🎮</div>
-      <p>Memuat KOLKA...</p>
+  <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 flex items-center justify-center">
+    <div className="text-center">
+      <div className="text-6xl mb-4 animate-bounce">🎮</div>
+      <p className="text-gray-700 font-semibold">Memuat KOLKA...</p>
     </div>
   </div>
 );
@@ -94,10 +90,46 @@ function App() {
               />
 
               <Route 
+                path="/bermain" 
+                element={
+                  <ProtectedRoute>
+                    <BermainMenu />
+                  </ProtectedRoute>
+                } 
+              />
+
+              <Route 
+                path="/game/melengkapi" 
+                element={
+                  <ProtectedRoute>
+                    <MelengkapiKalimat />
+                  </ProtectedRoute>
+                } 
+              />
+
+              <Route 
+                path="/game/menyusun" 
+                element={
+                  <ProtectedRoute>
+                    <MenyusunKalimat />
+                  </ProtectedRoute>
+                } 
+              />
+
+              <Route 
                 path="/game/:levelId" 
                 element={
                   <ProtectedRoute>
                     <GamePlay />
+                  </ProtectedRoute>
+                } 
+              />
+
+              <Route 
+                path="/kamus" 
+                element={
+                  <ProtectedRoute>
+                    <KamusPage />
                   </ProtectedRoute>
                 } 
               />

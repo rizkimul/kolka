@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Button, Card } from '../common';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
-import styles from './AuthForms.module.css';
+import { User, Lock, Loader2 } from 'lucide-react';
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -37,48 +36,63 @@ const LoginForm = () => {
   };
 
   return (
-    <Card className={styles.authCard}>
-      <h2 className={styles.title}>Selamat Datang Kembali! 🎉</h2>
-      <p className={styles.subtitle}>Masuk untuk lanjut main</p>
-
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="email" className={styles.label}>Email</label>
-          <input
-            id="email"
-            type="email"
-            className={styles.input}
-            placeholder="contoh@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
-          />
+    <>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Masuk</h2>
+      <p className="text-center text-gray-600 mb-6">Selamat datang kembali! 🎉</p>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+            Email
+          </label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="contoh@email.com"
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="password" className={styles.label}>Password</label>
-          <input
-            id="password"
-            type="password"
-            className={styles.input}
-            placeholder="Masukkan password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={loading}
-          />
+        <div>
+          <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+            Password
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Masukkan password"
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
         </div>
 
-        <Button 
-          type="submit" 
-          block 
-          size="large" 
-          loading={loading}
-          disabled={!email || !password}
+        <button
+          type="submit"
+          disabled={loading || !email || !password}
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 text-lg rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          Masuk & Main! 🎮
-        </Button>
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Memproses...
+            </>
+          ) : (
+            'Masuk 🎮'
+          )}
+        </button>
       </form>
-    </Card>
+    </>
   );
 };
 

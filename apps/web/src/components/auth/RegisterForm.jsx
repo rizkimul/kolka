@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Button, Card } from '../common';
-import AvatarPicker from './AvatarPicker';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
-import styles from './AuthForms.module.css';
+import { User, Mail, Lock, Loader2 } from 'lucide-react';
+import AvatarPicker from './AvatarPicker';
 
 const RegisterForm = () => {
   const { register } = useAuth();
@@ -69,82 +68,109 @@ const RegisterForm = () => {
   };
 
   return (
-    <Card className={styles.authCard}>
-      <h2 className={styles.title}>Buat Akun Baru 👋</h2>
-      <p className={styles.subtitle}>Yuk kenalan! Siapa namamu?</p>
+    <>
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Daftar</h2>
+      <p className="text-center text-gray-600 mb-6">Yuk kenalan! 👋</p>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="name" className={styles.label}>Nama Panggilan</label>
-          <input
-            id="name"
-            type="text"
-            className={styles.input}
-            placeholder="Contoh: Budi"
-            value={formData.name}
-            onChange={(e) => updateField('name', e.target.value)}
-            disabled={loading}
-          />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+            Nama Panggilan
+          </label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="name"
+              type="text"
+              value={formData.name}
+              onChange={(e) => updateField('name', e.target.value)}
+              placeholder="Contoh: Budi"
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="email" className={styles.label}>Email</label>
-          <input
-            id="email"
-            type="email"
-            className={styles.input}
-            placeholder="contoh@email.com"
-            value={formData.email}
-            onChange={(e) => updateField('email', e.target.value)}
-            disabled={loading}
-          />
+        <div>
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+            Email
+          </label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => updateField('email', e.target.value)}
+              placeholder="contoh@email.com"
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="password" className={styles.label}>Password</label>
-          <input
-            id="password"
-            type="password"
-            className={styles.input}
-            placeholder="Minimal 6 karakter"
-            value={formData.password}
-            onChange={(e) => updateField('password', e.target.value)}
-            disabled={loading}
-          />
+        <div>
+          <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+            Password
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => updateField('password', e.target.value)}
+              placeholder="Minimal 6 karakter"
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
         </div>
 
-        <div className={styles.field}>
-          <label htmlFor="confirmPassword" className={styles.label}>Ulangi Password</label>
-          <input
-            id="confirmPassword"
-            type="password"
-            className={styles.input}
-            placeholder="Ketik ulang password"
-            value={formData.confirmPassword}
-            onChange={(e) => updateField('confirmPassword', e.target.value)}
-            disabled={loading}
-          />
+        <div>
+          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+            Ulangi Password
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={(e) => updateField('confirmPassword', e.target.value)}
+              placeholder="Ketik ulang password"
+              disabled={loading}
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+            />
+          </div>
         </div>
 
-        <div className={styles.field}>
-          <label className={styles.label}>Pilih Karaktermu</label>
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Pilih Karaktermu
+          </label>
           <AvatarPicker 
             selected={formData.avatar}
             onSelect={(avatar) => updateField('avatar', avatar)}
           />
         </div>
 
-        <Button 
-          type="submit" 
-          block 
-          size="large" 
-          loading={loading}
-          disabled={!formData.name || !formData.email || !formData.password || !formData.avatar}
+        <button
+          type="submit"
+          disabled={loading || !formData.name || !formData.email || !formData.password || !formData.avatar}
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 text-lg rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          Mulai Petualangan! 🚀
-        </Button>
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Memproses...
+            </>
+          ) : (
+            'Mulai Petualangan! 🚀'
+          )}
+        </button>
       </form>
-    </Card>
+    </>
   );
 };
 

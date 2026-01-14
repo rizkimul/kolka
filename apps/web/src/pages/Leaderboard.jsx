@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Button, Card } from '../components/common';
 import { ArrowLeft, Trophy, Medal, Crown, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { leaderboardApi } from '../services/api';
-import styles from './Leaderboard.module.css';
 
 const Leaderboard = () => {
   const navigate = useNavigate();
@@ -12,7 +10,7 @@ const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [myRank, setMyRank] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('global'); // 'global' or 'weekly'
+  const [activeTab, setActiveTab] = useState('global');
 
   useEffect(() => {
     fetchLeaderboard();
@@ -28,12 +26,10 @@ const Leaderboard = () => {
       
       setLeaderboard(data);
 
-      // Fetch user's rank
       try {
         const rank = await leaderboardApi.getMyRank();
         setMyRank(rank);
       } catch (e) {
-        // User might not have any progress yet
         setMyRank(null);
       }
     } catch (error) {
@@ -46,110 +42,142 @@ const Leaderboard = () => {
   const getRankIcon = (rank) => {
     switch (rank) {
       case 1:
-        return <Crown size={24} color="#FFD700" />;
+        return <Crown size={24} className="text-yellow-500" />;
       case 2:
-        return <Medal size={24} color="#C0C0C0" />;
+        return <Medal size={24} className="text-gray-400" />;
       case 3:
-        return <Medal size={24} color="#CD7F32" />;
+        return <Medal size={24} className="text-amber-600" />;
       default:
-        return <span className={styles.rankNumber}>{rank}</span>;
+        return <span className="text-lg font-bold text-gray-500">{rank}</span>;
     }
   };
 
-  const getRankClass = (rank) => {
+  const getRankBg = (rank) => {
     switch (rank) {
       case 1:
-        return styles.gold;
+        return 'bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-400';
       case 2:
-        return styles.silver;
+        return 'bg-gradient-to-r from-gray-50 to-slate-50 border-l-4 border-gray-300';
       case 3:
-        return styles.bronze;
+        return 'bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500';
       default:
-        return '';
+        return 'bg-white';
     }
   };
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <Button 
-          variant="text" 
-          icon={<ArrowLeft size={24} />} 
-          onClick={() => navigate('/dashboard')}
-        >
-          Kembali
-        </Button>
-        <h1 className={styles.title}>
-          <Trophy size={28} /> Peringkat
-        </h1>
-      </header>
-
-      {/* Tab Switcher */}
-      <div className={styles.tabs}>
-        <button 
-          className={`${styles.tab} ${activeTab === 'global' ? styles.active : ''}`}
-          onClick={() => setActiveTab('global')}
-        >
-          Semua Waktu
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'weekly' ? styles.active : ''}`}
-          onClick={() => setActiveTab('weekly')}
-        >
-          Minggu Ini
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
+      {/* Header */}
+      <div className="bg-white shadow-md sticky top-0 z-10">
+        <div className="max-w-md mx-auto px-6 py-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-2">
+              <Trophy className="w-6 h-6 text-amber-500" />
+              <h1 className="text-2xl font-bold text-gray-800">Peringkat</h1>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* User's Rank */}
-      {myRank && myRank.rank > 0 && (
-        <Card className={styles.myRankCard}>
-          <div className={styles.myRankContent}>
-            <span className={styles.myRankLabel}>Peringkatmu</span>
-            <span className={styles.myRankNumber}>#{myRank.rank}</span>
-            <span className={styles.myRankTotal}>dari {myRank.totalPlayers} pemain</span>
-          </div>
-        </Card>
-      )}
+      <div className="max-w-md mx-auto px-6 py-6">
+        {/* Tab Switcher */}
+        <div className="flex bg-white rounded-xl p-1 shadow-md mb-6">
+          <button 
+            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'global' 
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
+                : 'text-gray-600 hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveTab('global')}
+          >
+            Semua Waktu
+          </button>
+          <button 
+            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'weekly' 
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
+                : 'text-gray-600 hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveTab('weekly')}
+          >
+            Minggu Ini
+          </button>
+        </div>
 
-      {/* Leaderboard List */}
-      <div className={styles.list}>
-        {loading ? (
-          <div className={styles.loadingContainer}>
-            <Loader2 className={styles.spinner} size={48} />
-            <p>Memuat peringkat...</p>
+        {/* User's Rank */}
+        {myRank && myRank.rank > 0 && (
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-lg p-6 mb-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm opacity-90">Peringkatmu</p>
+                <p className="text-4xl font-bold">#{myRank.rank}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm opacity-90">dari</p>
+                <p className="text-xl font-semibold">{myRank.totalPlayers} pemain</p>
+              </div>
+            </div>
           </div>
-        ) : leaderboard.length === 0 ? (
-          <div className={styles.emptyState}>
-            <p>🏆 Belum ada data peringkat.</p>
-            <p>Jadilah yang pertama!</p>
-          </div>
-        ) : (
-          leaderboard.map((entry) => (
-            <Card 
-              key={entry.userId} 
-              className={`${styles.rankCard} ${getRankClass(entry.rank)} ${entry.userId === user?.id ? styles.isMe : ''}`}
-            >
-              <div className={styles.rankIcon}>
-                {getRankIcon(entry.rank)}
-              </div>
-              <div className={styles.avatar}>
-                {entry.image || '🦁'}
-              </div>
-              <div className={styles.info}>
-                <span className={styles.name}>
-                  {entry.name}
-                  {entry.userId === user?.id && <span className={styles.youBadge}>Kamu</span>}
-                </span>
-                <span className={styles.stats}>
-                  Level {entry.currentLevel} • ⭐ {entry.totalStars}
-                </span>
-              </div>
-              <div className={styles.score}>
-                {entry.totalScore.toLocaleString()}
-              </div>
-            </Card>
-          ))
         )}
+
+        {/* Leaderboard List */}
+        <div className="space-y-3">
+          {loading ? (
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+              <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+              <p className="text-gray-600">Memuat peringkat...</p>
+            </div>
+          ) : leaderboard.length === 0 ? (
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+              <div className="text-6xl mb-4">🏆</div>
+              <p className="text-gray-800 font-semibold">Belum ada peringkat</p>
+              <p className="text-gray-600">Jadilah yang pertama!</p>
+            </div>
+          ) : (
+            leaderboard.map((entry) => (
+              <div 
+                key={entry.userId} 
+                className={`rounded-2xl shadow-md p-4 ${getRankBg(entry.rank)} ${
+                  entry.userId === user?.id ? 'ring-2 ring-purple-400' : ''
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 flex items-center justify-center">
+                    {getRankIcon(entry.rank)}
+                  </div>
+                  <div className="text-3xl">
+                    {entry.image || '🦁'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-gray-800 truncate">{entry.name}</span>
+                      {entry.userId === user?.id && (
+                        <span className="bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full font-semibold">
+                          Kamu
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm text-gray-600">
+                      Level {entry.currentLevel} • ⭐ {entry.totalStars}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-purple-600">
+                      {entry.totalScore.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">poin</div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
