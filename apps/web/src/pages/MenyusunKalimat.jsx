@@ -1,59 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DndContext, DragOverlay, useSensor, useSensors, MouseSensor, TouchSensor, useDroppable, useDraggable } from '@dnd-kit/core';
-import { ArrowLeft, Trophy, RotateCcw, CheckCircle, XCircle, Volume2 } from 'lucide-react';
+import { ArrowLeft, Trophy, RotateCcw, CheckCircle, XCircle, Volume2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { useTTS } from '../hooks/useTTS';
 import { playSuccessSound, playErrorSound, playPopSound } from '../utils/soundEffects';
-
-const questions = [
-  {
-    id: 1,
-    pattern: 'S-P',
-    words: ['bermain', 'Adik'],
-    correct: ['Adik', 'bermain'],
-    hint: [
-      { text: 'Adik', type: 'S' },
-      { text: 'bermain', type: 'P' },
-    ],
-  },
-  {
-    id: 2,
-    pattern: 'S-P-O',
-    words: ['membaca', 'buku', 'Kakak'],
-    correct: ['Kakak', 'membaca', 'buku'],
-    hint: [
-      { text: 'Kakak', type: 'S' },
-      { text: 'membaca', type: 'P' },
-      { text: 'buku', type: 'O' },
-    ],
-  },
-  {
-    id: 3,
-    pattern: 'S-P-O-K',
-    words: ['Ibu', 'di dapur', 'memasak', 'sayur'],
-    correct: ['Ibu', 'memasak', 'sayur', 'di dapur'],
-    hint: [
-      { text: 'Ibu', type: 'S' },
-      { text: 'memasak', type: 'P' },
-      { text: 'sayur', type: 'O' },
-      { text: 'di dapur', type: 'K' },
-    ],
-  },
-  {
-    id: 4,
-    pattern: 'S-P-O-K',
-    words: ['koran', 'setiap pagi', 'Ayah', 'membaca'],
-    correct: ['Ayah', 'membaca', 'koran', 'setiap pagi'],
-    hint: [
-      { text: 'Ayah', type: 'S' },
-      { text: 'membaca', type: 'P' },
-      { text: 'koran', type: 'O' },
-      { text: 'setiap pagi', type: 'K' },
-    ],
-  },
-];
+import { gamesApi } from '../services/api';
 
 const typeColors = {
   S: 'bg-red-500',
@@ -156,6 +109,9 @@ const MenyusunKalimat = () => {
   const navigate = useNavigate();
   const { speak } = useTTS();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [availableWords, setAvailableWords] = useState([]);
   const [arrangedWords, setArrangedWords] = useState([]);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -168,15 +124,66 @@ const MenyusunKalimat = () => {
     useSensor(TouchSensor, { activationConstraint: { distance: 8 } })
   );
 
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        const data = await gamesApi.getMenyusunKalimatQuestions();
+        const mappedData = data.map(q => ({
+          ...q,
+          correct: q.correctOrder
+        }));
+        setQuestions(mappedData);
+      } catch (err) {
+        console.error('Failed to fetch questions:', err);
+        setError('Gagal memuat soal.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchQuestions();
+  }, []);
+
   const currentQuestion = questions[currentIndex];
-  const isCorrect = JSON.stringify(arrangedWords) === JSON.stringify(currentQuestion.correct);
+  const isCorrect = currentQuestion && JSON.stringify(arrangedWords) === JSON.stringify(currentQuestion.correct);
 
   useEffect(() => {
-    // Shuffle words when question changes
-    setAvailableWords([...currentQuestion.words].sort(() => Math.random() - 0.5));
-    setArrangedWords([]);
-    setIsAnswered(false);
-  }, [currentIndex]);
+    if (currentQuestion) {
+      // Shuffle words when question changes
+      setAvailableWords([...currentQuestion.words].sort(() => Math.random() - 0.5));
+      setArrangedWords([]);
+      setIsAnswered(false);
+    }
+  }, [currentIndex, currentQuestion]);
+
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+         <div className="text-center">
+            <Loader2 className="w-10 h-10 text-purple-600 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Memuat soal...</p>
+         </div>
+      </div>
+    );
+  }
+
+  if (error || questions.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-6">
+          <p className="text-red-500 mb-4">{error || 'Tidak ada soal tersedia'}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
+          >
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleDragStart = (event) => {
     setActiveId(event.active.id);

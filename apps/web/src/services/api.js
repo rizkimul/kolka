@@ -233,6 +233,26 @@ export const questionsApi = {
 };
 
 // ============================================
+// Games API
+// ============================================
+
+export const gamesApi = {
+  /**
+   * Get Melengkapi Kalimat questions
+   */
+  async getMelengkapiKalimatQuestions() {
+    return api.get('/api/games/melengkapi-kalimat/questions');
+  },
+
+  /**
+   * Get Menyusun Kalimat questions
+   */
+  async getMenyusunKalimatQuestions() {
+    return api.get('/api/games/menyusun-kalimat/questions');
+  },
+};
+
+// ============================================
 // Progress API
 // ============================================
 

@@ -1,8 +1,24 @@
 .container {
   padding: 20px;
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
   min-height: 100vh;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 32px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+  .container {
+    max-width: 900px;
+    padding: 40px;
+  }
 }
 
 .header {

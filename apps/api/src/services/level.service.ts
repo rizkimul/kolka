@@ -63,17 +63,7 @@ export class LevelService {
     return level;
   }
 
-  /**
-   * Get questions for a level
-   */
-  async getLevelQuestions(levelId: string) {
-    const questions = await db.query.questions.findMany({
-      where: eq(schema.questions.levelId, levelId),
-      orderBy: asc(schema.questions.order),
-    });
 
-    return questions.filter((q) => q.isActive);
-  }
 
   /**
    * Check if a level is unlocked for a user

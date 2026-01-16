@@ -122,31 +122,32 @@ const KamusPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
       {/* Header */}
       <div className="bg-white shadow-md sticky top-0 z-10">
-        <div className="max-w-md mx-auto px-6 py-4">
+        <div className="max-w-[900px] mx-auto px-6 py-4 md:px-8 lg:px-12">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/dashboard')}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-2 md:px-4 md:py-2 rounded-full md:rounded-xl hover:bg-gray-100 transition-colors flex items-center gap-2"
             >
               <ArrowLeft className="w-5 h-5" />
+              <span className="hidden md:inline text-sm font-medium text-gray-600">Kembali</span>
             </button>
-            <h1 className="text-2xl font-bold text-gray-800">Kamus Pintar SPOK</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Kamus Pintar SPOK</h1>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-md mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-[900px] mx-auto px-6 py-8 md:px-8 lg:px-12 space-y-6">
         {/* SPOK Buttons */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {['S', 'P', 'O', 'K'].map((element) => (
             <button
               key={element}
               onClick={() => handleSelectElement(element)}
-              className={`${spokData[element].bgColor} ${spokData[element].hoverBg} rounded-2xl shadow-lg p-8 text-center transition-all hover:scale-105 active:scale-95`}
+              className={`${spokData[element].bgColor} ${spokData[element].hoverBg} rounded-2xl shadow-lg p-8 md:p-10 text-center transition-all hover:scale-105 active:scale-95`}
             >
-              <div className="text-5xl font-bold text-white mb-2">{element}</div>
-              <div className="text-white font-semibold">{spokData[element].title}</div>
+              <div className="text-5xl md:text-6xl font-bold text-white mb-2">{element}</div>
+              <div className="text-white font-semibold md:text-lg">{spokData[element].title}</div>
             </button>
           ))}
         </div>

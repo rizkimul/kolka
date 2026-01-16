@@ -1,8 +1,24 @@
 .container {
   padding: 20px;
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
   min-height: 100vh;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 32px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+  .container {
+    max-width: 900px;
+    padding: 40px;
+  }
 }
 
 .mainAction {
@@ -37,6 +53,17 @@
   font-size: 0.9rem;
 }
 
+/* Tablet: Larger text */
+@media (min-width: 768px) {
+  .playContent h3 {
+    font-size: 1.75rem;
+  }
+  
+  .playContent p {
+    font-size: 1rem;
+  }
+}
+
 .playButton {
   box-shadow: 0 4px 15px rgba(79, 182, 227, 0.4) !important;
 }
@@ -45,6 +72,14 @@
   font-size: 4rem;
   margin-left: var(--spacing-md);
   animation: float 3s ease-in-out infinite;
+}
+
+/* Larger illustration on tablet+ */
+@media (min-width: 768px) {
+  .illustration {
+    font-size: 5rem;
+    margin-left: var(--spacing-lg);
+  }
 }
 
 @keyframes float {
@@ -57,6 +92,21 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-md);
+}
+
+/* Tablet: Larger gap */
+@media (min-width: 768px) {
+  .menuGrid {
+    gap: var(--spacing-lg);
+  }
+}
+
+/* Desktop: 3 columns if needed */
+@media (min-width: 992px) {
+  .menuGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+  }
 }
 
 .menuItem {
@@ -75,6 +125,15 @@
   height: 120px;
 }
 
+/* Larger menu items on tablet+ */
+@media (min-width: 768px) {
+  .menuItem {
+    height: 140px;
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+  }
+}
+
 .menuItem:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
@@ -89,12 +148,27 @@
   justify-content: center;
 }
 
+/* Larger icons on tablet+ */
+@media (min-width: 768px) {
+  .menuIcon {
+    width: 56px;
+    height: 56px;
+  }
+}
+
 .blue { background-color: var(--color-primary); }
 .yellow { background-color: var(--color-adverb); }
 
 .menuItem span {
   font-weight: 700;
   color: var(--color-text-main);
+}
+
+/* Larger text on tablet+ */
+@media (min-width: 768px) {
+  .menuItem span {
+    font-size: 1.1rem;
+  }
 }
 
 .modalFooter {

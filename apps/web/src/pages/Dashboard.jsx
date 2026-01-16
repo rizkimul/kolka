@@ -68,50 +68,51 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
       {/* Header */}
       <div className="bg-white shadow-md">
-        <div className="max-w-md mx-auto px-6 py-6">
+        <div className="max-w-[900px] mx-auto px-6 py-6 md:px-8 lg:px-12">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-8 h-8 text-purple-600" />
-              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+              <Sparkles className="w-8 h-8 text-purple-600 md:w-10 md:h-10" />
+              <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
                 KOLKA
               </h1>
             </div>
             <button
               onClick={() => setShowLogoutConfirm(true)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-2 md:px-4 md:py-2 rounded-full md:rounded-xl hover:bg-gray-100 transition-colors flex items-center gap-2"
               aria-label="Keluar"
             >
               <LogOut className="w-5 h-5 text-gray-600" />
+              <span className="hidden md:inline text-sm font-medium text-gray-600">Keluar</span>
             </button>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm md:text-base text-gray-600">
             Selamat datang, <span className="font-semibold text-purple-600">{user?.name || 'Pemain'}</span>!
           </p>
         </div>
       </div>
 
       {/* Stats Card */}
-      <div className="max-w-md mx-auto px-6 py-6">
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="text-4xl">{user?.image || '🦁'}</div>
+      <div className="max-w-[900px] mx-auto px-6 py-6 md:px-8 lg:px-12">
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-6">
+          <div className="flex items-center gap-4 md:gap-6 mb-4">
+            <div className="text-4xl md:text-5xl">{user?.image || '🦁'}</div>
             <div className="flex-1">
-              <p className="font-bold text-lg text-gray-800">{user?.name || 'Pemain'}</p>
-              <p className="text-sm text-gray-600">Level {currentLevel}</p>
+              <p className="font-bold text-lg md:text-xl text-gray-800">{user?.name || 'Pemain'}</p>
+              <p className="text-sm md:text-base text-gray-600">Level {currentLevel}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-purple-600">{totalScore}</div>
-              <div className="text-xs text-gray-600">Total Skor</div>
+              <div className="text-2xl md:text-3xl font-bold text-purple-600">{totalScore}</div>
+              <div className="text-xs md:text-sm text-gray-600">Total Skor</div>
             </div>
           </div>
           
           {/* XP Progress Bar */}
           <div className="mb-3">
-            <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <div className="flex justify-between text-xs md:text-sm text-gray-600 mb-1">
               <span>XP Progress</span>
               <span>{currentLevelXp}/{maxExp}</span>
             </div>
-            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-3 md:h-4 bg-gray-200 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
                 style={{ width: `${(currentLevelXp / maxExp) * 100}%` }}
@@ -122,21 +123,22 @@ const Dashboard = () => {
           {/* Stars */}
           <div className="flex items-center gap-1 justify-center">
             <span className="text-amber-500">⭐</span>
-            <span className="font-semibold text-gray-700">{totalStars} Bintang</span>
+            <span className="font-semibold text-gray-700 md:text-lg">{totalStars} Bintang</span>
           </div>
         </div>
 
         {/* Menu Items */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
               <button
                 key={item.id}
                 onClick={() => navigate(item.route)}
-                className={`w-full ${item.bgColor} rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 text-left group hover:scale-[1.02] active:scale-[0.98]`}
+                className={`w-full ${item.bgColor} rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 md:p-8 text-left md:text-center group hover:scale-[1.02] active:scale-[0.98]`}
               >
-                <div className="flex items-start gap-4">
+                {/* Mobile: Horizontal layout */}
+                <div className="flex items-start gap-4 md:hidden">
                   <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
@@ -145,6 +147,18 @@ const Dashboard = () => {
                       {item.title}
                     </h3>
                     <p className="text-sm text-gray-600">{item.subtitle}</p>
+                  </div>
+                </div>
+                {/* Desktop: Icon above text */}
+                <div className="hidden md:flex flex-col items-center gap-4">
+                  <div className={`w-20 h-20 lg:w-24 lg:h-24 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl lg:text-2xl font-bold text-gray-800 mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm lg:text-base text-gray-600">{item.subtitle}</p>
                   </div>
                 </div>
               </button>

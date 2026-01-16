@@ -9,23 +9,24 @@ const GuidePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
       {/* Header */}
       <div className="bg-white shadow-md sticky top-0 z-10">
-        <div className="max-w-md mx-auto px-6 py-4">
+        <div className="max-w-[900px] mx-auto px-6 py-4 md:px-8 lg:px-12">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/dashboard')}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-2 md:px-4 md:py-2 rounded-full md:rounded-xl hover:bg-gray-100 transition-colors flex items-center gap-2"
             >
               <ArrowLeft className="w-5 h-5" />
+              <span className="hidden md:inline text-sm font-medium text-gray-600">Kembali</span>
             </button>
-            <h1 className="text-2xl font-bold text-gray-800">Panduan Penggunaan</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Panduan Penggunaan</h1>
           </div>
         </div>
       </div>
 
       {/* Content - Scrollable */}
-      <div className="max-w-md mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-[900px] mx-auto px-6 py-8 md:px-8 lg:px-12 space-y-6">
         {/* Intro */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
               <HelpCircle className="w-6 h-6 text-purple-600" />

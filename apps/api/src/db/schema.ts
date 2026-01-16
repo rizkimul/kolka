@@ -112,20 +112,33 @@ export const levelCompletions = pgTable(
   })
 );
 
-export const questions = pgTable("questions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  levelId: uuid("level_id")
-    .notNull()
-    .references(() => levels.id, { onDelete: "cascade" }),
-  sentence: text("sentence").notNull(), // "_____ bermain bola di lapangan"
-  missingPart: text("missing_part").notNull(), // 'subject', 'predicate', 'object', 'adverb'
-  correctAnswer: text("correct_answer").notNull(),
-  options: jsonb("options").notNull(), // Array of {id, text, type, image}
-  contextImage: text("context_image"), // Emoji representation
-  order: integer("order").notNull(),
-  isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const melengkapiKalimatQuestions = pgTable(
+  "melengkapi_kalimat_questions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    type: text("type").notNull(), // 'S' | 'P' | 'O' | 'K'
+    sentenceParts: jsonb("sentence_parts").notNull(), // Array<{text, type, isBlank}>
+    options: jsonb("options").notNull(), // Array<string>
+    correctAnswer: text("correct_answer").notNull(),
+    order: integer("order").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  }
+);
+
+export const menyusunKalimatQuestions = pgTable(
+  "menyusun_kalimat_questions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    pattern: text("pattern").notNull(), // 'S-P' | 'S-P-O' | 'S-P-O-K'
+    words: jsonb("words").notNull(), // Array<string>
+    correctOrder: jsonb("correct_order").notNull(), // Array<string>
+    hint: jsonb("hint").notNull(), // Array<{text, type}>
+    order: integer("order").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  }
+);
 
 // ============================================
 // Relations
@@ -151,7 +164,6 @@ export const gameProgressRelations = relations(gameProgress, ({ one }) => ({
 }));
 
 export const levelsRelations = relations(levels, ({ many }) => ({
-  questions: many(questions),
   completions: many(levelCompletions),
 }));
 
@@ -160,9 +172,7 @@ export const levelCompletionsRelations = relations(levelCompletions, ({ one }) =
   level: one(levels, { fields: [levelCompletions.levelId], references: [levels.id] }),
 }));
 
-export const questionsRelations = relations(questions, ({ one }) => ({
-  level: one(levels, { fields: [questions.levelId], references: [levels.id] }),
-}));
+
 
 // ============================================
 // Type Exports
@@ -183,12 +193,13 @@ export type NewLevel = typeof levels.$inferInsert;
 export type LevelCompletion = typeof levelCompletions.$inferSelect;
 export type NewLevelCompletion = typeof levelCompletions.$inferInsert;
 
-export type Question = typeof questions.$inferSelect;
-export type NewQuestion = typeof questions.$inferInsert;
+export type MelengkapiKalimatQuestion =
+  typeof melengkapiKalimatQuestions.$inferSelect;
+export type NewMelengkapiKalimatQuestion =
+  typeof melengkapiKalimatQuestions.$inferInsert;
 
-export type QuestionOption = {
-  id: string;
-  text: string;
-  type: string;
-  image: string;
-};
+export type MenyusunKalimatQuestion =
+  typeof menyusunKalimatQuestions.$inferSelect;
+export type NewMenyusunKalimatQuestion =
+  typeof menyusunKalimatQuestions.$inferInsert;
+

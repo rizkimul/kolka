@@ -38,38 +38,12 @@ router.get(
       return;
     }
 
-    const questions = await levelService.getLevelQuestions(level.id);
-    
     res.json({
       ...level,
-      questions,
     });
   })
 );
 
-/**
- * GET /api/levels/:slug/questions
- * Get questions for a specific level
- */
-router.get(
-  "/:slug/questions",
-  requireAuth,
-  asyncHandler(async (req, res) => {
-    const level = await levelService.getLevelBySlug(req.params.slug);
-    
-    // Check if unlocked
-    const isUnlocked = await levelService.isLevelUnlocked(req.user!.id, level.id);
-    
-    if (!isUnlocked) {
-      res.status(403).json({ 
-        error: "Level ini masih terkunci. Kumpulkan lebih banyak bintang!" 
-      });
-      return;
-    }
 
-    const questions = await levelService.getLevelQuestions(level.id);
-    res.json(questions);
-  })
-);
 
 export default router;

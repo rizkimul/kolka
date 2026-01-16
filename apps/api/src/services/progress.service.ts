@@ -71,15 +71,8 @@ export class ProgressService {
       throw new NotFoundError("Level");
     }
 
-    // Get level questions count
-    const questions = await db.query.questions.findMany({
-      where: eq(schema.questions.levelId, levelId),
-    });
-    const totalQuestions = questions.filter((q) => q.isActive).length;
-
-    if (correctCount + wrongCount !== totalQuestions) {
-      throw new ValidationError("Jumlah jawaban tidak sesuai dengan jumlah soal");
-    }
+    // Calculate total questions from input
+    const totalQuestions = correctCount + wrongCount;
 
     // Calculate stars
     const stars = this.calculateStars(correctCount, totalQuestions);

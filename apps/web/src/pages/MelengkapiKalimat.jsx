@@ -29,198 +29,7 @@ const standardizeWord = (word, isSubject = false) => {
 };
 
 // Question data from reference
-const questions = [
-  // Subjek (4 soal)
-  { 
-    id: 1, 
-    type: 'S', 
-    sentenceParts: [
-      { text: '', type: 'S', isBlank: true },
-      { text: 'membaca', type: 'P' },
-      { text: 'buku', type: 'O' },
-      { text: 'di perpustakaan', type: 'K' },
-    ],
-    options: ['Adik', 'membaca', 'buku', 'perpustakaan'], 
-    correct: 'Adik' 
-  },
-  { 
-    id: 2, 
-    type: 'S', 
-    sentenceParts: [
-      { text: '', type: 'S', isBlank: true },
-      { text: 'bermain', type: 'P' },
-      { text: 'di taman', type: 'K' },
-    ],
-    options: ['Anak-anak', 'bermain', 'taman', 'bola'], 
-    correct: 'Anak-anak' 
-  },
-  { 
-    id: 3, 
-    type: 'S', 
-    sentenceParts: [
-      { text: '', type: 'S', isBlank: true },
-      { text: 'memasak', type: 'P' },
-      { text: 'nasi goreng', type: 'O' },
-    ],
-    options: ['Ibu', 'memasak', 'nasi', 'goreng'], 
-    correct: 'Ibu' 
-  },
-  { 
-    id: 4, 
-    type: 'S', 
-    sentenceParts: [
-      { text: '', type: 'S', isBlank: true },
-      { text: 'tidur', type: 'P' },
-      { text: 'di kasur', type: 'K' },
-    ],
-    options: ['Kucing', 'tidur', 'kasur', 'lembut'], 
-    correct: 'Kucing' 
-  },
-  
-  // Predikat (4 soal)
-  { 
-    id: 5, 
-    type: 'P', 
-    sentenceParts: [
-      { text: 'Ayah', type: 'S' },
-      { text: '', type: 'P', isBlank: true },
-      { text: 'koran', type: 'O' },
-      { text: 'setiap pagi', type: 'K' },
-    ],
-    options: ['membaca', 'koran', 'pagi', 'Ayah'], 
-    correct: 'membaca' 
-  },
-  { 
-    id: 6, 
-    type: 'P', 
-    sentenceParts: [
-      { text: 'Kakak', type: 'S' },
-      { text: '', type: 'P', isBlank: true },
-      { text: 'sepeda', type: 'O' },
-      { text: 'ke sekolah', type: 'K' },
-    ],
-    options: ['mengendarai', 'sepeda', 'sekolah', 'Kakak'], 
-    correct: 'mengendarai' 
-  },
-  { 
-    id: 7, 
-    type: 'P', 
-    sentenceParts: [
-      { text: 'Nenek', type: 'S' },
-      { text: '', type: 'P', isBlank: true },
-      { text: 'di kursi goyang', type: 'K' },
-    ],
-    options: ['duduk', 'kursi', 'goyang', 'Nenek'], 
-    correct: 'duduk' 
-  },
-  { 
-    id: 8, 
-    type: 'P', 
-    sentenceParts: [
-      { text: 'Burung', type: 'S' },
-      { text: '', type: 'P', isBlank: true },
-      { text: 'di pohon', type: 'K' },
-    ],
-    options: ['bernyanyi', 'pohon', 'burung', 'indah'], 
-    correct: 'bernyanyi' 
-  },
-  
-  // Objek (4 soal)
-  { 
-    id: 9, 
-    type: 'O', 
-    sentenceParts: [
-      { text: 'Adik', type: 'S' },
-      { text: 'menggambar', type: 'P' },
-      { text: '', type: 'O', isBlank: true },
-      { text: 'di kertas', type: 'K' },
-    ],
-    options: ['bunga', 'menggambar', 'kertas', 'Adik'], 
-    correct: 'bunga' 
-  },
-  { 
-    id: 10, 
-    type: 'O', 
-    sentenceParts: [
-      { text: 'Ibu', type: 'S' },
-      { text: 'mencuci', type: 'P' },
-      { text: '', type: 'O', isBlank: true },
-      { text: 'di dapur', type: 'K' },
-    ],
-    options: ['piring', 'mencuci', 'dapur', 'Ibu'], 
-    correct: 'piring' 
-  },
-  { 
-    id: 11, 
-    type: 'O', 
-    sentenceParts: [
-      { text: 'Kakak', type: 'S' },
-      { text: 'memakai', type: 'P' },
-      { text: '', type: 'O', isBlank: true },
-      { text: 'baru', type: 'K' },
-    ],
-    options: ['sepatu', 'memakai', 'baru', 'Kakak'], 
-    correct: 'sepatu' 
-  },
-  { 
-    id: 12, 
-    type: 'O', 
-    sentenceParts: [
-      { text: 'Ayah', type: 'S' },
-      { text: 'memperbaiki', type: 'P' },
-      { text: '', type: 'O', isBlank: true },
-      { text: 'yang rusak', type: 'K' },
-    ],
-    options: ['kursi', 'memperbaiki', 'rusak', 'Ayah'], 
-    correct: 'kursi' 
-  },
-  
-  // Keterangan (4 soal)
-  { 
-    id: 13, 
-    type: 'K', 
-    sentenceParts: [
-      { text: 'Kami', type: 'S' },
-      { text: 'belajar', type: 'P' },
-      { text: '', type: 'K', isBlank: true },
-    ],
-    options: ['di sekolah', 'belajar', 'kami', 'guru'], 
-    correct: 'di sekolah' 
-  },
-  { 
-    id: 14, 
-    type: 'K', 
-    sentenceParts: [
-      { text: 'Ibu', type: 'S' },
-      { text: 'memasak', type: 'P' },
-      { text: '', type: 'K', isBlank: true },
-    ],
-    options: ['setiap hari', 'memasak', 'ibu', 'makanan'], 
-    correct: 'setiap hari' 
-  },
-  { 
-    id: 15, 
-    type: 'K', 
-    sentenceParts: [
-      { text: 'Adik', type: 'S' },
-      { text: 'menulis', type: 'P' },
-      { text: '', type: 'K', isBlank: true },
-    ],
-    options: ['dengan pensil', 'menulis', 'adik', 'buku'], 
-    correct: 'dengan pensil' 
-  },
-  { 
-    id: 16, 
-    type: 'K', 
-    sentenceParts: [
-      { text: 'Ayah', type: 'S' },
-      { text: 'berangkat kerja', type: 'P' },
-      { text: '', type: 'K', isBlank: true },
-    ],
-    options: ['pagi hari', 'berangkat', 'ayah', 'kerja'], 
-    correct: 'pagi hari' 
-  },
-];
+import { gamesApi } from '../services/api';
 
 const typeColors = {
   S: { bg: 'bg-red-500', light: 'bg-red-50', text: 'text-red-600', border: 'border-red-500' },
@@ -311,29 +120,85 @@ const MelengkapiKalimat = () => {
   const navigate = useNavigate();
   const { speak } = useTTS();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [activeId, setActiveId] = useState(null);
 
+  const [shuffledOptions, setShuffledOptions] = useState([]);
+
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { distance: 8 } })
   );
 
-  const currentQuestion = questions[currentIndex];
-  const isCorrect = selectedAnswer === currentQuestion.correct;
-  const colors = typeColors[currentQuestion.type];
-
-  // Shuffle options when question changes
-  const [shuffledOptions, setShuffledOptions] = useState([]);
-  
   useEffect(() => {
-    setShuffledOptions(shuffleArray(currentQuestion.options));
-    setSelectedAnswer(null);
-    setIsAnswered(false);
-  }, [currentIndex]);
+    fetchQuestions();
+  }, []);
+
+  // Shuffle options when question changes - must be before any conditional returns
+  useEffect(() => {
+    if (questions[currentIndex]) {
+      setShuffledOptions(shuffleArray(questions[currentIndex].options));
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+    }
+  }, [currentIndex, questions]);
+
+  const fetchQuestions = async () => {
+    try {
+      setLoading(true);
+      const data = await gamesApi.getMelengkapiKalimatQuestions();
+      // Map correctAnswer to correct for compatibility
+      const mappedData = data.map(q => ({
+        ...q,
+        correct: q.correctAnswer
+      }));
+      setQuestions(mappedData);
+    } catch (err) {
+      console.error('Failed to fetch questions:', err);
+      setError('Gagal memuat soal. Silakan coba lagi.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const currentQuestion = questions[currentIndex];
+  // Guard clause for loading state
+  const isCorrect = currentQuestion && selectedAnswer === currentQuestion.correct;
+  const colors = currentQuestion ? typeColors[currentQuestion.type] : typeColors.S;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+         <div className="text-center">
+            <Loader2 className="w-10 h-10 text-purple-600 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Memuat soal...</p>
+         </div>
+      </div>
+    );
+  }
+
+  if (error || questions.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-6">
+          <p className="text-red-500 mb-4">{error || 'Tidak ada soal tersedia'}</p>
+          <button 
+            onClick={fetchQuestions}
+            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700"
+          >
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+    );
+  }
+
 
   const handleDragStart = (event) => {
     setActiveId(event.active.id);
