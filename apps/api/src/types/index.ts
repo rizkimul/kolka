@@ -10,9 +10,10 @@ export type {
   NewLevel,
   LevelCompletion,
   NewLevelCompletion,
-  Question,
-  NewQuestion,
-  QuestionOption,
+  MelengkapiKalimatQuestion,
+  NewMelengkapiKalimatQuestion,
+  MenyusunKalimatQuestion,
+  NewMenyusunKalimatQuestion,
 } from "../db/schema.js";
 
 // API Response types
