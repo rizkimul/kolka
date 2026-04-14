@@ -20,7 +20,7 @@
 
 ## 📖 About
 
-**KOLKA** (Kalimat Olah Kata) is an educational game designed specifically for deaf children learning Indonesian sentence structure. The app teaches **SPOK** (Subjek, Predikat, Objek, Keterangan) - the fundamental components of Indonesian grammar:
+**KOLKA** (Kalimat Olah Kata) is an educational game designed specifically for deaf children learning Indonesian sentence structure. The app teaches **SPOK** (Subjek, Predikat, Objek, Keterangan) - the fundamental components of Indonesian grammar through an engaging drag-and-drop interface.
 
 | Component | Meaning | Question | Example |
 |-----------|---------|----------|---------|
@@ -35,136 +35,121 @@
 
 ## ✨ Features
 
-- 🎯 **Drag-and-Drop Gameplay** - Interactive learning through visual sentence building
-- 🏆 **Level Progression** - 4 progressive levels focusing on each SPOK component
-- ⭐ **Star Rating System** - Earn 0-3 stars based on performance
-- 📊 **Progress Dashboard** - Track total score, XP, and completion statistics
-- 🏅 **Leaderboard** - Compete with other learners
-- 🎊 **Confetti Celebrations** - Rewarding feedback for correct answers
-- 🔐 **User Authentication** - Secure login with Better Auth
-- 📱 **Responsive Design** - Works on desktop and mobile devices
+- 🎯 **Interactive Learning** - Drag-and-drop mechanics to build sentences visually.
+- 🏆 **Progressive Levels** - 4 levels focusing on each SPOK component (S, P, O, K).
+- ⭐ **Performance Ratings** - Earn up to 3 stars per level based on accuracy.
+- 📊 **Dynamic Dashboard** - Detailed stats including total XP, stars, and completion history.
+- 🏅 **Global Leaderboard** - Compete with other learners in weekly and global rankings.
+- 🎉 **Visual Feedback** - Confetti celebrations and animations to reward progress.
+- 🔐 **Secure Auth** - Custom JWT-based authentication with bcrypt password hashing.
+- 📱 **Responsive UI** - Optimized for both desktop and tablet experiences.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend (`apps/web`)
-- **React 19** with Vite for fast development
-- **React Router DOM** for navigation
-- **@dnd-kit** for drag-and-drop functionality
-- **Framer Motion** for smooth animations
-- **Lucide React** for icons
-- **Canvas Confetti** for celebration effects
-- **CSS Modules** for scoped styling
+### Monorepo Structure
+- **npm Workspaces** for managing `apps/` and `packages/`
 
-### Backend (`apps/api`)
-- **Express.js** REST API
-- **TypeScript** for type safety
-- **Drizzle ORM** with PostgreSQL
-- **Better Auth** for authentication
-- **Zod** for validation
+### Frontend ([apps/web](file:///Users/rizkimaulanasidik/Developer/Me/Proj/Kolka/apps/web))
+- **React 19** & **Vite**
+- **React Router 7** for navigation
+- **dnd-kit** for drag-and-drop functionality
+- **Framer Motion** for premium animations
+- **CSS Modules** for component-scoped styling
+- **Canvas Confetti** for rewards
+
+### Backend ([apps/api](file:///Users/rizkimaulanasidik/Developer/Me/Proj/Kolka/apps/api))
+- **Express.js** with **TypeScript**
+- **Drizzle ORM** for type-safe database access
+- **PostgreSQL** database
+- **JWT + bcrypt** for custom authentication
+- **Zod** for request validation
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - **Node.js** 18.x or higher
-- **PostgreSQL** database
-- **npm** or **yarn**
+- **Postgres** (locally or via [Neon](https://neon.tech/))
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone & Install**
    ```bash
    git clone https://github.com/yourusername/kolka.git
    cd kolka
-   ```
-
-2. **Install dependencies**
-   ```bash
    npm install
    ```
 
-3. **Configure environment variables**
-   
-   Create `.env` file in `apps/api`:
+2. **Environment Setup**
+   Create `.env` in `apps/api`:
    ```env
-   DATABASE_URL=postgresql://user:password@localhost:5432/kolka
-   BETTER_AUTH_SECRET=your-secret-key
+   DATABASE_URL=postgresql://user:pass@localhost:5432/kolka
+   JWT_SECRET=your-random-secret
    FRONTEND_URL=http://localhost:5173
-   PORT=3000
-   NODE_ENV=development
    ```
 
-4. **Set up the database**
+3. **Database Initialization**
    ```bash
    cd apps/api
-   npm run db:push      # Push schema to database
-   npm run db:seed      # Seed initial data
+   npm run db:push    # Sync schema
+   npm run db:seed    # Load levels & questions
+   
+   # Optional Database Tools
+   npm run db:studio  # Open Drizzle GUI to view data
+   npm run db:generate # Generate migration files
    ```
 
-5. **Start development servers**
+4. **Run Development**
    ```bash
    # From root directory
-   npm run dev          # Starts frontend
-   
-   # In another terminal
-   cd apps/api
-   npm run dev          # Starts backend
+   npm run dev
    ```
-
-6. **Open the app**
-   
-   Navigate to `http://localhost:5173` in your browser
+   *Frontend: `http://localhost:5173` | Backend: `http://localhost:3001`*
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 kolka/
 ├── apps/
-│   ├── web/                 # React frontend
+│   ├── web/                 # React Frontend
 │   │   ├── src/
-│   │   │   ├── components/  # Reusable UI components
-│   │   │   ├── context/     # Auth & Game context providers
-│   │   │   ├── pages/       # Page components
-│   │   │   ├── services/    # API service layer
-│   │   │   └── styles/      # Global styles
-│   │   └── package.json
+│   │   │   ├── components/  # Reusable UI (Common, Game, Layout)
+│   │   │   ├── context/     # Auth, Game, & Toast providers
+│   │   │   ├── pages/       # View components (Dashboard, GamePlay, etc.)
+│   │   │   ├── services/    # API abstraction layer
+│   │   │   └── styles/      # Design system & global styles
 │   │
-│   └── api/                 # Express backend
+│   └── api/                 # Express Backend
 │       ├── src/
-│       │   ├── config/      # Environment config
-│       │   ├── db/          # Drizzle schema & migrations
-│       │   ├── lib/         # Better Auth setup
-│       │   ├── middleware/  # Express middleware
-│       │   ├── routes/      # API routes
-│       │   └── services/    # Business logic
-│       └── package.json
+│       │   ├── db/          # Schema, Migrations, & Seeds
+│       │   ├── lib/         # JWT and Auth utilities
+│       │   ├── routes/      # Express route controllers
+│       │   ├── services/    # Business logic layer
+│       │   └── middleware/  # Error & Auth handling
 │
-├── packages/                # Shared packages (future)
-└── package.json             # Monorepo root
+├── packages/                # Shared utilities (future)
+└── package.json             # Root workspace config
 ```
 
 ---
 
-## 🔌 API Endpoints
+## 🔌 API Summary
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/auth/sign-up/email` | Register new user |
-| `POST` | `/api/auth/sign-in/email` | Login user |
-| `POST` | `/api/auth/sign-out` | Logout user |
-| `GET` | `/api/auth/session` | Get current session |
-| `GET` | `/api/users/me` | Get current user profile |
-| `GET` | `/api/levels` | Get all levels |
-| `GET` | `/api/levels/:id/questions` | Get questions for a level |
-| `GET` | `/api/progress` | Get user progress |
-| `POST` | `/api/progress/complete-level` | Submit level completion |
-| `GET` | `/api/leaderboard` | Get top players |
+| `POST` | `/api/auth/register` | Create a new account |
+| `POST` | `/api/auth/login` | Sign in & receive JWT |
+| `GET`  | `/api/auth/me` | Verify token & get session |
+| `GET`  | `/api/users/me` | Current user profile & progress |
+| `GET`  | `/api/levels` | List of game levels |
+| `GET`  | `/api/levels/:slug/questions` | Level-specific questions |
+| `POST` | `/api/progress/levels/:id/complete` | Submit level results |
+| `GET`  | `/api/leaderboard` | Global player rankings |
 
 ---
 
@@ -192,20 +177,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🙏 Acknowledgments
-
-- Designed with ❤️ for deaf children learning Indonesian
-- Built for educational purposes
-- Inspired by gamification in language learning
-
----
-
-<p align="center">
-  Made with 💜 by the KOLKA Team
-</p>
+- Built with ❤️ for the deaf community.
+- Inspired by modern gamification in language learning.
